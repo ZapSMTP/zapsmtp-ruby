@@ -1,0 +1,68 @@
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - "vendor/**/*"
+    - "coverage/**/*"
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Layout/LineLength:
+  Max: 120
+
+# Resource methods mirror the API's names: emails.send, webhooks.test.
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+# Page#has_more? mirrors the API's has_more.
+Naming/PredicatePrefix:
+  AllowedMethods:
+    - has_more?
+
+Metrics/MethodLength:
+  Max: 25
+  Exclude:
+    - "test/**/*"
+
+Metrics/AbcSize:
+  Max: 40
+  Exclude:
+    - "test/**/*"
+
+Metrics/ClassLength:
+  Max: 150
+  Exclude:
+    - "lib/zapsmtp/generated/**/*"
+    - "test/**/*"
+
+Metrics/ModuleLength:
+  Exclude:
+    - "lib/zapsmtp/generated/**/*"
+
+Metrics/ParameterLists:
+  Max: 8
+  CountKeywordArgs: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "test/**/*"
+    - "*.gemspec"
+
+Style/Documentation:
+  Exclude:
+    - "test/**/*"
+
+Naming/VariableNumber:
+  Exclude:
+    - "test/**/*"
+
+Metrics/CyclomaticComplexity:
+  Max: 12
+
+Metrics/PerceivedComplexity:
+  Max: 12
