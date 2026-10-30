@@ -50,7 +50,7 @@ class ClientTest < Minitest::Test
     h = transport.calls[0].headers
     assert_equal "https://api.test/v1/emails/a%2Fb%20c", transport.calls[0].url
     assert_equal "zapsmtp-ruby/#{ZapSMTP::VERSION} (ruby/#{RUBY_VERSION})", h["User-Agent"]
-    assert_match(%r{\Azapsmtp-ruby/\d+\.\d+\.\d+ }, h["User-Agent"])
+    assert_match(%r{\Azapsmtp-ruby/\d+\.\d+\.\d+(\.\w+)? }, h["User-Agent"])
     assert_equal "application/json", h["Accept"]
     assert_equal "mail", h["X-Team"]
     assert_equal "1", h["X-Extra"]

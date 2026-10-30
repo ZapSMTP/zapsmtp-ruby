@@ -1,0 +1,36 @@
+# Publishes to RubyGems when a version tag (v0.1.0, v0.1.0.beta1) is pushed.
+# No API key: RubyGems trusts this workflow (trusted publishing), configured
+# on rubygems.org for owner ZapSMTP, repository zapsmtp-ruby, workflow
+# publish.yml, environment rubygems.
+#
+# The full test suite needs the shared conformance cases and spec of the
+# ZapSMTP SDK monorepo and runs there before a release is exported here; this
+# workflow checks the built gem itself.
+name: publish
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: rubygems
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Tag matches the gem version
+        run: |
+          v=$(ruby -Ilib -e 'require "zapsmtp/version"; print ZapSMTP::VERSION')
+          [ "${GITHUB_REF_NAME}" = "v$v" ] || { echo "tag ${GITHUB_REF_NAME} != v$v"; exit 1; }
+      - name: Build, install and load the gem
+        run: |
+          gem build zapsmtp.gemspec
+          gem install --local ./zapsmtp-*.gem
+          cd /tmp && ruby -e 'require "zapsmtp"; c = ZapSMTP::Client.new(api_key: "zap_test"); puts ZapSMTP::VERSION'
+      - uses: rubygems/configure-rubygems-credentials@v1.0.0
+      - run: gem push zapsmtp-*.gem
