@@ -19,7 +19,7 @@ jobs:
     permissions:
       id-token: write
     env:
-      # the RubyGems.org account that owns the gem (its immutable ID): a
+      # the RubyGems.org account that owns the gem (its immutable ID, as a string): a
       # first push must name it
       RUBYGEMS_OWNER: "255236"
     steps:
@@ -40,7 +40,7 @@ jobs:
         run: |
           jwt=$(curl -fsS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=rubygems.org" | jq -r .value)
-          body=$(jq -n --arg jwt "$jwt" --argjson owner "$RUBYGEMS_OWNER" '{jwt: $jwt, owner: $owner}')
+          body=$(jq -n --arg jwt "$jwt" --arg owner "$RUBYGEMS_OWNER" '{jwt: $jwt, owner: $owner}')
           res=$(curl -sS -X POST https://rubygems.org/api/v1/oidc/trusted_publisher/exchange_token \
             -H "Content-Type: application/json" -d "$body")
           key=$(echo "$res" | jq -r '.rubygems_api_key // empty')
