@@ -283,7 +283,19 @@ response. API errors raise as above (ActionMailer's `raise_delivery_errors` appl
 Settings: `api_key`, `base_url`, `timeout`, `max_retries`, `default_headers`, `transport`, or
 `client:` an existing `ZapSMTP::Client`.
 
-Without Rails, the Mail gem can use it too:
+ActionMailer without Rails (a Sinatra or Hanami app, a script): register the delivery method and
+the `zapsmtp:` option once, then configure ActionMailer as above:
+
+```ruby
+require "action_mailer"
+require "zapsmtp/rails"
+
+ZapSMTP::Rails.install(ActionMailer::Base)
+ActionMailer::Base.delivery_method = :zapsmtp
+ActionMailer::Base.zapsmtp_settings = { api_key: ENV["ZAP_API_KEY"] }
+```
+
+Without Rails or ActionMailer, the Mail gem can use it too:
 
 ```ruby
 require "zapsmtp/rails"
