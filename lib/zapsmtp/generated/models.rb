@@ -1569,6 +1569,9 @@ module ZapSMTP
     # SendBatchResponseData, as the API answers it. Fields not listed here are kept too: read them with #[] or
     # #to_h.
     class SendBatchResponseData < Model
+      # @!attribute [r] failed_recipients
+      #   @return [Array<String>, nil]
+      attribute :failed_recipients
       # @!attribute [r] id
       #   @return [String]
       attribute :id
@@ -2061,7 +2064,7 @@ module ZapSMTP
       #   @return [Array<ZapSMTP::Models::TemplateVariableSchema>, nil]
       attribute :variable_schema, [:array, "TemplateVariableSchema"]
       # @!attribute [r] variables
-      #   @return [Hash{String => String}, nil]
+      #   @return [Hash{String => Object}, nil]
       attribute :variables
     end
 
@@ -2262,7 +2265,7 @@ module ZapSMTP
       #   @return [Integer]
       attribute :inbound_count
       # @!attribute [r] last_inbound_at
-      #   @return [String]
+      #   @return [String, nil]
       attribute :last_inbound_at
       # @!attribute [r] last_message
       #   @return [ZapSMTP::Models::ThreadLastMessage]
