@@ -66,3 +66,10 @@ Metrics/CyclomaticComplexity:
 
 Metrics/PerceivedComplexity:
   Max: 12
+
+# Generated attributes mirror the API's field names (overage_cents_per_1000);
+# test names quote status codes (test_answers_nil_for_204).
+Naming/VariableNumber:
+  Exclude:
+    - "lib/zapsmtp/generated/**/*"
+    - "test/**/*"

@@ -50,6 +50,9 @@ module ZapSMTP
     # @return [Resources::Usage]
     attr_reader :usage
 
+    # @return [Resources::Account]
+    attr_reader :account
+
     # @return [Resources::TemplateModules]
     attr_reader :template_modules
 
@@ -82,6 +85,7 @@ module ZapSMTP
       @dedicated_ips = Resources::DedicatedIps.new(self)
       @logs = Resources::Logs.new(self)
       @usage = Resources::Usage.new(self)
+      @account = Resources::Account.new(self)
       @template_modules = Resources::TemplateModules.new(self)
       @template_assets = Resources::TemplateAssets.new(self)
       @template_timers = Resources::TemplateTimers.new(self)

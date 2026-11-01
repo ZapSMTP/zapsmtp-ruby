@@ -32,7 +32,7 @@ class ConformanceTest < Minitest::Test
   end
 
   def test_covers_every_operation_once
-    assert_equal 112, CASES.size
+    assert_equal 114, CASES.size
     assert_equal CASES.size, CASES.map { |c| c["id"] }.uniq.size
   end
 

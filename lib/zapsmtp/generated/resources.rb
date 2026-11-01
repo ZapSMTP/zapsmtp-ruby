@@ -2398,6 +2398,51 @@ module ZapSMTP
       end
     end
 
+    # zap.account
+    class Account
+      # @api private
+      def initialize(client)
+        @client = client
+      end
+
+      # Retrieve the account.
+      #
+      # The account the key belongs to: its name, status and sending rate limit, the plan with its limits,
+      # this month’s sent count and the SMTP relay settings. Requires a full-access key. spend_cap_cents is
+      # null without a spending cap. For the month’s overage and limit use GET /usage. Plan changes and
+      # payments are made in the dashboard, never with an API key.
+      #
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::AccountInfo]
+      def get(request_options: {})
+        @client.request(
+          method: :get,
+          path: "/account",
+          model: Models::AccountInfo,
+          request_options: request_options
+        )
+      end
+
+      # Rename the account.
+      #
+      # Rename the account. Answers the account as GET /account does. Requires a full-access live key; test
+      # keys get 403 test_key_restricted.
+      #
+      # @param params [Hash] the parameters below, also accepted as keyword arguments
+      # @option params [String] :name 1–100 characters. Required.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::AccountInfo]
+      def update(params = {}, request_options: {}, **kwargs)
+        @client.request(
+          method: :patch,
+          path: "/account",
+          body: Util.params(params, kwargs),
+          model: Models::AccountInfo,
+          request_options: request_options
+        )
+      end
+    end
+
     # zap.template_modules
     class TemplateModules
       # @api private

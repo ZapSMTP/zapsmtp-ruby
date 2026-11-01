@@ -5,6 +5,128 @@
 module ZapSMTP
   # Response models: a reader for every field the API documents, #[] and #to_h for all of them.
   module Models
+    # AccountInfo, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class AccountInfo < Model
+      # @!attribute [r] account
+      #   @return [ZapSMTP::Models::AccountProfile]
+      attribute :account, "AccountProfile"
+      # @!attribute [r] object
+      #   @return [String, nil]
+      attribute :object
+      # @!attribute [r] plan
+      #   @return [ZapSMTP::Models::AccountPlan]
+      attribute :plan, "AccountPlan"
+      # @!attribute [r] smtp
+      #   @return [ZapSMTP::Models::AccountSmtp]
+      attribute :smtp, "AccountSmtp"
+      # @!attribute [r] usage
+      #   @return [ZapSMTP::Models::AccountUsage]
+      attribute :usage, "AccountUsage"
+    end
+
+    # AccountPlan, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class AccountPlan < Model
+      # @!attribute [r] daily_emails
+      #   @return [Integer]
+      attribute :daily_emails
+      # @!attribute [r] id
+      #   @return [String]
+      attribute :id
+      # @!attribute [r] included_emails
+      #   @return [Integer]
+      attribute :included_emails
+      # @!attribute [r] max_domains
+      #   @return [Integer]
+      attribute :max_domains
+      # @!attribute [r] max_smtp_credentials
+      #   @return [Integer]
+      attribute :max_smtp_credentials
+      # @!attribute [r] name
+      #   @return [String]
+      attribute :name
+      # @!attribute [r] overage_cents_per_1000
+      #   @return [Integer]
+      attribute :overage_cents_per_1000
+      # @!attribute [r] price_cents
+      #   @return [Integer]
+      attribute :price_cents
+      # @!attribute [r] retention_days
+      #   @return [Integer]
+      attribute :retention_days
+      # @!attribute [r] smtp_relay
+      #   @return [Boolean, nil]
+      attribute :smtp_relay
+      # @!attribute [r] tier
+      #   @return [String]
+      attribute :tier
+    end
+
+    # AccountProfile, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class AccountProfile < Model
+      # @!attribute [r] created_at
+      #   @return [String]
+      attribute :created_at
+      # @!attribute [r] current_period_end
+      #   @return [String, nil]
+      attribute :current_period_end
+      # @!attribute [r] dedicated_ips
+      #   @return [Integer]
+      attribute :dedicated_ips
+      # @!attribute [r] id
+      #   @return [String]
+      attribute :id
+      # @!attribute [r] monthly_quota
+      #   @return [Integer]
+      attribute :monthly_quota
+      # @!attribute [r] name
+      #   @return [String]
+      attribute :name
+      # @!attribute [r] plan
+      #   @return [String]
+      attribute :plan
+      # @!attribute [r] rate_limit_per_sec
+      #   @return [Float]
+      attribute :rate_limit_per_sec
+      # @!attribute [r] spend_cap_cents
+      #   @return [Integer, nil]
+      attribute :spend_cap_cents
+      # @!attribute [r] status
+      #   @return [String]
+      attribute :status
+      # @!attribute [r] subscription_status
+      #   @return [String]
+      attribute :subscription_status
+    end
+
+    # AccountSmtp, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class AccountSmtp < Model
+      # @!attribute [r] host
+      #   @return [String]
+      attribute :host
+      # @!attribute [r] password
+      #   @return [String]
+      attribute :password
+      # @!attribute [r] ports
+      #   @return [Array<Integer>]
+      attribute :ports
+      # @!attribute [r] username
+      #   @return [String]
+      attribute :username
+    end
+
+    # AccountUsage, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class AccountUsage < Model
+      # @!attribute [r] month
+      #   @return [String]
+      attribute :month
+      # @!attribute [r] monthly_quota
+      #   @return [Integer]
+      attribute :monthly_quota
+      # @!attribute [r] sent
+      #   @return [Integer]
+      attribute :sent
+    end
+
     # Action, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
     class Action < Model
       # @!attribute [r] clicks_30d
