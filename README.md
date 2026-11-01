@@ -139,10 +139,12 @@ end
 
 ## Retries and timeouts
 
-A request that failed on the way (429, 408, 5xx, a lost connection) is tried again twice by default,
+A request that failed on the way (408, 429, 500, 502, 503, 504, a lost connection) is tried again twice by default,
 waiting as the API's `Retry-After` says or backing off exponentially. Only requests that are safe to
 repeat are retried: reads, updates by `PUT`, deletes, and sends, which always carry an
-`Idempotency-Key` (pass your own to make retries of your own safe too).
+`Idempotency-Key` (pass your own to make retries of your own safe too). Other `POST` and `PATCH` requests are retried only on 429. A 429 for a quota
+(`monthly_quota_exceeded`, `daily_quota_exceeded`) or `thread_reply_limit` is never retried; a 409
+`idempotency_request_in_progress` is.
 
 ```ruby
 zap = ZapSMTP::Client.new(api_key: "zap_...", max_retries: 4, timeout: 20)

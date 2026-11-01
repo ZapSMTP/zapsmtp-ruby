@@ -249,6 +249,9 @@ module ZapSMTP
       #   <unit>" with unit min|mins|minute|minutes|h|hour|hours|d|day|days. Times in the past send immediately.
       #   Limits: unparsable → 422 invalid_parameter; more than 7 days ahead → 422 invalid_parameter
       #   "scheduled_at must be within 7 days"
+      # @option params [String] :tls opportunistic, required or verified: required delivers only over TLS,
+      #   verified only with a valid certificate for the receiving server. The stricter of this and the domain’s
+      #   policy applies: it raises the domain’s policy, never lowers it.
       # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
       # @return [ZapSMTP::Models::SendEmailResponse]
       def reply(id, params = {}, request_options: {}, **kwargs)
@@ -384,8 +387,9 @@ module ZapSMTP
       #   (reserved); a value of the wrong type → 422 template_variables_invalid; a required variable without
       #   value or default → 422 template_variables_missing; anything else the template uses still absent → 422
       #   template_render_error "missing template variables: a, b"
-      # @option params [String] :tls required or verified: deliver only over TLS (verified: with a valid
-      #   certificate for the receiving server). Raises the domain's policy, never lowers it.
+      # @option params [String] :tls opportunistic, required or verified: required delivers only over TLS,
+      #   verified only with a valid certificate for the receiving server. The stricter of this and the domain’s
+      #   policy applies: it raises the domain’s policy, never lowers it.
       # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
       # @return [ZapSMTP::Models::SendEmailResponse]
       def send(params = {}, request_options: {}, **kwargs)
