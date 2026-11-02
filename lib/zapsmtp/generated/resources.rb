@@ -1703,15 +1703,19 @@ module ZapSMTP
       # @option params [Array<String>] :events Limits: unknown type → 422 invalid_parameter "unknown event
       #   type <x>; allowed: ..." One of: email.sent, email.delivered, email.delivery_delayed, email.bounced,
       #   email.complained, email.failed, email.opened, email.clicked, email.suppressed, email.received,
-      #   thread.created, thread.replied, email.replied. Default: all event types.
+      #   thread.created, thread.replied, email.replied, email.opened_unique, email.clicked_unique,
+      #   email.unsubscribed, email.forward_failed, domain.verified, domain.reputation_changed, email.scheduled,
+      #   suppression.added, suppression.removed, domain.created, domain.deleted. Default: every type except
+      #   email.opened_unique and email.clicked_unique.
       # @option params [Boolean] :include_content email.received carries the message: text, html, headers, and
       #   download links (valid 24 hours) for the attachments and the raw .eml; text and html are cut at 1 MB in
       #   total (truncated: true). Default: false.
       # @option params [Boolean] :batch Send events up to 100 per request (or every second) as a JSON array,
       #   signed as one body; Zap-Event-Id is the batch id, each event keeps its own id. email.received with the
       #   full message still arrives alone. Default: false.
-      # @option params [Hash] :filter Narrows email.clicked to some click actions; other event types are not
-      #   affected. Empty or absent: every click. Default: {"actions": []}.
+      # @option params [Hash] :filter Narrows what the endpoint receives: actions narrows email.clicked (and
+      #   email.clicked_unique) to some click actions; domains narrows every event to some domains. Empty or
+      #   absent: every click, every domain. Default: {"actions": [], "domains": []}.
       # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
       # @return [ZapSMTP::Models::Webhook]
       def create(params = {}, request_options: {}, **kwargs)
@@ -1752,7 +1756,10 @@ module ZapSMTP
       # @option params [Array<String>] :events Limits: [] → 422 "select at least one event"; unknown type →
       #   422 "unknown event type <x>" One of: email.sent, email.delivered, email.delivery_delayed,
       #   email.bounced, email.complained, email.failed, email.opened, email.clicked, email.suppressed,
-      #   email.received, thread.created, thread.replied, email.replied.
+      #   email.received, thread.created, thread.replied, email.replied, email.opened_unique,
+      #   email.clicked_unique, email.unsubscribed, email.forward_failed, domain.verified,
+      #   domain.reputation_changed, email.scheduled, suppression.added, suppression.removed, domain.created,
+      #   domain.deleted.
       # @option params [Boolean] :enabled Re-enabling clears disabled_reason. Disabling drops pending
       #   deliveries.
       # @option params [Boolean] :include_content email.received carries the message: text, html, headers, and
@@ -1761,8 +1768,10 @@ module ZapSMTP
       # @option params [Boolean] :batch Send events up to 100 per request (or every second) as a JSON array,
       #   signed as one body; Zap-Event-Id is the batch id, each event keeps its own id. email.received with the
       #   full message still arrives alone. Default: false.
-      # @option params [Hash] :filter Narrows email.clicked to some click actions; other event types are not
-      #   affected. Empty or absent: every click. Replaces the whole filter; {"actions": []} removes it.
+      # @option params [Hash] :filter Narrows what the endpoint receives: actions narrows email.clicked (and
+      #   email.clicked_unique) to some click actions; domains narrows every event to some domains. Empty or
+      #   absent: every click, every domain. A list you leave out keeps its value; an empty list clears it:
+      #   {"actions": []} lets every click through, {"domains": []} every domain.
       # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
       # @return [ZapSMTP::Models::Webhook]
       def update(id, params = {}, request_options: {}, **kwargs)
@@ -1802,8 +1811,10 @@ module ZapSMTP
       # @param params [Hash] the parameters below, also accepted as keyword arguments
       # @option params [String] :type Limits: 422 invalid_parameter "unknown event type" One of: email.sent,
       #   email.delivered, email.delivery_delayed, email.bounced, email.complained, email.failed, email.opened,
-      #   email.clicked, email.suppressed, email.received, thread.created, thread.replied, email.replied.
-      #   Default: email.delivered.
+      #   email.clicked, email.suppressed, email.received, thread.created, thread.replied, email.replied,
+      #   email.opened_unique, email.clicked_unique, email.unsubscribed, email.forward_failed, domain.verified,
+      #   domain.reputation_changed, email.scheduled, suppression.added, suppression.removed, domain.created,
+      #   domain.deleted. Default: email.delivered.
       # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
       # @return [ZapSMTP::Models::WebhookTestResult]
       def test(id, params = {}, request_options: {}, **kwargs)
