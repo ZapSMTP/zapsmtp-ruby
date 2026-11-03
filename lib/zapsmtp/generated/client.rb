@@ -68,6 +68,12 @@ module ZapSMTP
     # @return [Resources::Variables]
     attr_reader :variables
 
+    # @return [Resources::EmailValidations]
+    attr_reader :email_validations
+
+    # @return [Resources::PlacementTests]
+    attr_reader :placement_tests
+
     private
 
     def build_resources
@@ -91,6 +97,8 @@ module ZapSMTP
       @template_timers = Resources::TemplateTimers.new(self)
       @actions = Resources::Actions.new(self)
       @variables = Resources::Variables.new(self)
+      @email_validations = Resources::EmailValidations.new(self)
+      @placement_tests = Resources::PlacementTests.new(self)
     end
   end
 end

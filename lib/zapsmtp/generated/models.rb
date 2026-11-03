@@ -1003,6 +1003,84 @@ module ZapSMTP
       attribute :url
     end
 
+    # EmailValidation, as the API answers it. Fields not listed here are kept too: read them with #[] or
+    # #to_h.
+    class EmailValidation < Model
+      # @!attribute [r] checks
+      #   @return [ZapSMTP::Models::EmailValidationChecks]
+      attribute :checks, "EmailValidationChecks"
+      # @!attribute [r] did_you_mean
+      #   @return [String, nil]
+      attribute :did_you_mean
+      # @!attribute [r] email
+      #   @return [String]
+      attribute :email
+      # @!attribute [r] normalized
+      #   @return [String]
+      attribute :normalized
+      # @!attribute [r] object
+      #   @return [String]
+      attribute :object
+      # @!attribute [r] reason
+      #   @return [String]
+      attribute :reason
+      # @!attribute [r] reasons
+      #   @return [Array<String>]
+      attribute :reasons
+      # @!attribute [r] result
+      #   @return [String]
+      attribute :result
+      # @!attribute [r] score
+      #   @return [Float]
+      attribute :score
+    end
+
+    # EmailValidationChecks, as the API answers it. Fields not listed here are kept too: read them with #[] or
+    # #to_h.
+    class EmailValidationChecks < Model
+      # @!attribute [r] accept_all
+      #   @return [Boolean, nil]
+      attribute :accept_all
+      # @!attribute [r] disposable
+      #   @return [Boolean]
+      attribute :disposable
+      # @!attribute [r] domain
+      #   @return [String]
+      attribute :domain
+      # @!attribute [r] free
+      #   @return [Boolean]
+      attribute :free
+      # @!attribute [r] mailbox
+      #   @return [String]
+      attribute :mailbox
+      # @!attribute [r] mx
+      #   @return [Array<String>]
+      attribute :mx
+      # @!attribute [r] previously_bounced
+      #   @return [Boolean]
+      attribute :previously_bounced
+      # @!attribute [r] role
+      #   @return [Boolean]
+      attribute :role
+      # @!attribute [r] suppressed
+      #   @return [Boolean]
+      attribute :suppressed
+      # @!attribute [r] syntax
+      #   @return [Boolean]
+      attribute :syntax
+    end
+
+    # EmailValidationList, as the API answers it. Fields not listed here are kept too: read them with #[] or
+    # #to_h.
+    class EmailValidationList < Model
+      # @!attribute [r] data
+      #   @return [Array<ZapSMTP::Models::EmailValidation>]
+      attribute :data, [:array, "EmailValidation"]
+      # @!attribute [r] object
+      #   @return [String]
+      attribute :object
+    end
+
     # ForwardDestination, as the API answers it. Fields not listed here are kept too: read them with #[] or
     # #to_h.
     class ForwardDestination < Model
@@ -1433,6 +1511,123 @@ module ZapSMTP
       # @!attribute [r] suppressed
       #   @return [Integer]
       attribute :suppressed
+    end
+
+    # PlacementAuth, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class PlacementAuth < Model
+      # @!attribute [r] dkim
+      #   @return [String]
+      attribute :dkim
+      # @!attribute [r] dmarc
+      #   @return [String]
+      attribute :dmarc
+      # @!attribute [r] spf
+      #   @return [String]
+      attribute :spf
+    end
+
+    # PlacementResult, as the API answers it. Fields not listed here are kept too: read them with #[] or
+    # #to_h.
+    class PlacementResult < Model
+      # @!attribute [r] address
+      #   @return [String]
+      attribute :address
+      # @!attribute [r] auth
+      #   @return [ZapSMTP::Models::PlacementAuth, nil]
+      attribute :auth, "PlacementAuth"
+      # @!attribute [r] email_id
+      #   @return [String, nil]
+      attribute :email_id
+      # @!attribute [r] folder
+      #   @return [String, nil]
+      attribute :folder
+      # @!attribute [r] placement
+      #   @return [String, nil]
+      attribute :placement
+      # @!attribute [r] provider
+      #   @return [String]
+      attribute :provider
+      # @!attribute [r] received_at
+      #   @return [String, nil]
+      attribute :received_at
+    end
+
+    # PlacementSummary, as the API answers it. Fields not listed here are kept too: read them with #[] or
+    # #to_h.
+    class PlacementSummary < Model
+      # @!attribute [r] forums
+      #   @return [Integer]
+      attribute :forums
+      # @!attribute [r] inbox
+      #   @return [Integer]
+      attribute :inbox
+      # @!attribute [r] inbox_rate
+      #   @return [Float]
+      attribute :inbox_rate
+      # @!attribute [r] missing
+      #   @return [Integer]
+      attribute :missing
+      # @!attribute [r] pending
+      #   @return [Integer]
+      attribute :pending
+      # @!attribute [r] primary
+      #   @return [Integer]
+      attribute :primary
+      # @!attribute [r] promotions
+      #   @return [Integer]
+      attribute :promotions
+      # @!attribute [r] social
+      #   @return [Integer]
+      attribute :social
+      # @!attribute [r] spam
+      #   @return [Integer]
+      attribute :spam
+      # @!attribute [r] total
+      #   @return [Integer]
+      attribute :total
+      # @!attribute [r] updates
+      #   @return [Integer]
+      attribute :updates
+    end
+
+    # PlacementTest, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.
+    class PlacementTest < Model
+      # @!attribute [r] created_at
+      #   @return [String]
+      attribute :created_at
+      # @!attribute [r] ends_at
+      #   @return [String]
+      attribute :ends_at
+      # @!attribute [r] finished_at
+      #   @return [String, nil]
+      attribute :finished_at
+      # @!attribute [r] from
+      #   @return [String, nil]
+      attribute :from
+      # @!attribute [r] id
+      #   @return [String]
+      attribute :id
+      # @!attribute [r] mode
+      #   @return [String]
+      attribute :mode
+      # @!attribute [r] object
+      #   @return [String]
+      attribute :object
+      # @!attribute [r] results
+      #   @return [Array<ZapSMTP::Models::PlacementResult>]
+      attribute :results, [:array, "PlacementResult"]
+      # @!attribute [r] status
+      #   @return [String]
+      attribute :status
+      # @!attribute [r] subject
+      #   @return [String, nil]
+      attribute :subject
+      # @!attribute [r] summary
+      #   @return [ZapSMTP::Models::PlacementSummary]
+      attribute :summary, "PlacementSummary"
+      # @!attribute [r] token
+      #   @return [String]
+      attribute :token
     end
 
     # ReceivedEmail, as the API answers it. Fields not listed here are kept too: read them with #[] or #to_h.

@@ -2879,5 +2879,146 @@ module ZapSMTP
         )
       end
     end
+
+    # zap.email_validations
+    class EmailValidations
+      # @api private
+      def initialize(client)
+        @client = client
+      end
+
+      # Validate an address.
+      #
+      # Check one address before you send to it: syntax, the domain and its mail servers, throw-away and role
+      # addresses, typos, your suppression list and earlier hard bounces. Any API key; test keys too (nothing
+      # is sent or changed). result: deliverable (every check passed), risky (it may arrive, but sending to it
+      # can hurt your reputation), undeliverable (it will bounce) or unknown (the domain's DNS did not answer:
+      # try again later). reason is the most serious of reasons: invalid_syntax, reserved_domain,
+      # domain_not_found, no_mail_server, mailbox_not_found, previously_bounced (hard bounced on ZapSMTP in
+      # the last 180 days), dns_error, suppressed (on your suppression list), disposable, accept_all,
+      # role_address; ok when there is none. checks.mailbox is exists, not_found, unknown or not_checked.
+      # Nothing is ever sent to the address. did_you_mean suggests a likely intended address when the domain
+      # looks like a typo. Each address counts against your plan's monthly validations (Free 100, Pro 5,000,
+      # Scale 25,000); over it: 429 monthly_quota_exceeded. Results are not stored.
+      #
+      # @param params [Hash] the parameters below, also accepted as keyword arguments
+      # @option params [String] :email The address to check. Required.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::EmailValidation]
+      def create(params = {}, request_options: {}, **kwargs)
+        @client.request(
+          method: :post,
+          path: "/email-validations",
+          body: Util.params(params, kwargs),
+          model: Models::EmailValidation,
+          request_options: request_options
+        )
+      end
+
+      # Validate up to 100 addresses.
+      #
+      # Check up to 100 addresses in one call; results come back in the order given. Any API key; test keys
+      # too (nothing is sent or changed). Each address counts against the plan's monthly validations; a batch
+      # that would pass the allowance is refused whole.
+      #
+      # @param params [Hash] the parameters below, also accepted as keyword arguments
+      # @option params [Array<String>] :emails 1–100 addresses, each at most 320 characters. Required.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::EmailValidationList]
+      def create_batch(params = {}, request_options: {}, **kwargs)
+        @client.request(
+          method: :post,
+          path: "/email-validations/batch",
+          body: Util.params(params, kwargs),
+          model: Models::EmailValidationList,
+          request_options: request_options
+        )
+      end
+    end
+
+    # zap.placement_tests
+    class PlacementTests
+      # @api private
+      def initialize(client)
+        @client = client
+      end
+
+      # Start a placement test.
+      #
+      # Start an inbox placement test: see whether a message lands in the inbox, a Gmail tab or spam at the
+      # big mailbox providers. Requires a full-access live key; test keys get 403 test_key_restricted. With a
+      # message (from and content, or a template) one copy goes to each seed mailbox through your account,
+      # like any send (each counts as a sent email; test keys cannot). Without one the test is manual: send
+      # your message to every address in results from anywhere, with token in the subject or text, within 2
+      # hours. ZapSMTP then reads each seed mailbox (Gmail, Outlook, Yahoo and others) and records where the
+      # copy landed: inbox, a Gmail tab (promotions, social, updates, forums), spam, or missing once the test
+      # ends (15 minutes after a send). auth is the provider's own SPF, DKIM and DMARC verdict. status is
+      # running until every seed has an answer or the test ends, then done. summary.inbox_rate = inbox (any
+      # tab) / seeds with an answer. Your plan includes a number of tests a month (Free 1, Pro 10, Scale 50);
+      # over it: 429 monthly_quota_exceeded.
+      #
+      # @param params [Hash] the parameters below, also accepted as keyword arguments
+      # @option params [String] :from Sender on one of your verified domains. Leave out (with template) for a
+      #   manual test.
+      # @option params [String] :subject As in Send an email.
+      # @option params [String] :html As in Send an email.
+      # @option params [String] :text As in Send an email.
+      # @option params [Hash] :template A stored template and its variables, as in Send an email.
+      # @option params [Hash{String => String}] :headers Extra headers, as in Send an email.
+      # @option params [Array<Hash>] :tags As in Send an email.
+      # @option params [String] :stream As in Send an email.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::PlacementTest]
+      def create(params = {}, request_options: {}, **kwargs)
+        @client.request(
+          method: :post,
+          path: "/placement-tests",
+          body: Util.params(params, kwargs),
+          model: Models::PlacementTest,
+          request_options: request_options
+        )
+      end
+
+      # Retrieve a placement test.
+      #
+      # Retrieve a placement test with where each copy landed. Requires a full-access key. ZapSMTP then reads
+      # each seed mailbox (Gmail, Outlook, Yahoo and others) and records where the copy landed: inbox, a Gmail
+      # tab (promotions, social, updates, forums), spam, or missing once the test ends (15 minutes after a
+      # send). auth is the provider's own SPF, DKIM and DMARC verdict. status is running until every seed has
+      # an answer or the test ends, then done. summary.inbox_rate = inbox (any tab) / seeds with an answer.
+      #
+      # @param id [String] The test id.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Models::PlacementTest]
+      def get(id, request_options: {})
+        @client.request(
+          method: :get,
+          path: "/placement-tests/#{Util.seg("id", id)}",
+          model: Models::PlacementTest,
+          request_options: request_options
+        )
+      end
+
+      # List placement tests.
+      #
+      # List placement tests, newest first, with cursor pagination. Requires a full-access key. Pass
+      # next_cursor as after for the next page.
+      #
+      # @param params [Hash] the parameters below, also accepted as keyword arguments
+      # @option params [Integer] :limit 1-100. Limits: 422 invalid_parameter otherwise. Default: 20.
+      # @option params [String] :after A test id from next_cursor. Limits: 422 invalid_parameter otherwise.
+      # @param request_options [Hash] :idempotency_key, :headers, :timeout and :max_retries for this call
+      # @return [ZapSMTP::Page<ZapSMTP::Models::PlacementTest>]
+      def list(params = {}, request_options: {}, **kwargs)
+        @client.request_page(
+          method: :get,
+          path: "/placement-tests",
+          query: Util.params(params, kwargs),
+          model: Models::PlacementTest,
+          paging: :cursor,
+          request_options: request_options
+        )
+      end
+    end
   end
 end
